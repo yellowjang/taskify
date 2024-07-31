@@ -40,3 +40,15 @@ $desktop-min: 1200px;
     gap: #{$mobile}px;
   }
 }
+
+@mixin ResponsiveLineHeight($desktop, $tablet, $mobile) {
+  line-height: #{$desktop}px;
+
+  @include tablet {
+    line-height: #{$tablet}px;
+  }
+
+  @include mobile {
+    line-height: #{$mobile}px;
+  }
+}
