@@ -28,3 +28,15 @@ $desktop-min: 1200px;
     @content;
   }
 }
+
+@mixin ResponsiveGap($desktop, $tablet, $mobile) {
+  gap: #{$desktop}px;
+
+  @include tablet {
+    gap: #{$tablet}px;
+  }
+
+  @include mobile {
+    gap: #{$mobile}px;
+  }
+}
