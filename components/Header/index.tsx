@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import logoIcon from '@/assets/images/img_logo_icon.png';
 import logoText from '@/assets/images/img_logo_text.png';
-import Button from '../Button';
 
 export default function Header({ mode = '' }) {
   return (

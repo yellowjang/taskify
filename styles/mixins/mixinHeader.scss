@@ -8,12 +8,12 @@
 
   // 태블릿에서 너비 적용
   @include tablet {
-    width: if($tablet-size != null, $tablet-size, $desktop-size);
+    width: #{$tablet-size};
   }
 
   // 모바일에서 너비 적용
   @include mobile {
-    width: if($mobile-size != null, $mobile-size, $desktop-size);
+    width: #{$mobile-size};
   }
 }
 
