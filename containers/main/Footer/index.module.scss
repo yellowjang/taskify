@@ -1,0 +1,43 @@
+@use '@/styles/index' as *;
+
+.footer {
+  border-top: 1px solid $gray-d9;
+  @include Size(100%, 100px);
+  padding: 39px 140px;
+
+  div {
+    @include Flex(row, space-between, center);
+  }
+
+  .links {
+    gap: 32px;
+  }
+
+  .socials {
+    gap: 14px;
+    a {
+      line-height: 0;
+    }
+  }
+
+  p,
+  a {
+    color: $gray-9f;
+    @include FontStyle(lg, 400);
+  }
+
+  svg {
+    fill: $gray-d9;
+    &.facebook:hover {
+      fill: $facebook-color;
+    }
+
+    &.instagram:hover {
+      fill: $instagram-color;
+    }
+
+    &.envelop:hover {
+      fill: $main-yellow;
+    }
+  }
+}
