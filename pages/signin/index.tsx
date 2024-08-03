@@ -1,16 +1,17 @@
 import Link from 'next/link';
 import SignInForm from '@/containers/sign/SiginInForm';
 import TopLogoSection from '@/containers/sign/TopLogoSection';
+import styles from './index.module.scss';
 
 export default function SignInPage() {
   return (
-    <div className='flex items-center justify-center'>
-      <div className='w-[350px] items-center justify-center md:w-[520px]'>
+    <div className={styles.box}>
+      <div className={styles.login}>
         <TopLogoSection text='오늘도 만나서 반가워요!' />
         <SignInForm />
-        <p className='mt-[20px] text-center text-black_33'>
+        <p className={styles.member}>
           회원이 아니신가요?{' '}
-          <Link href='/signup' className='text-violet underline'>
+          <Link href='/signup' className={`${styles.link} ${styles.underline}`}>
             회원가입하기
           </Link>
         </p>

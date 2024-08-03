@@ -1,6 +1,7 @@
-import Image from 'next/image';
 import { useState } from 'react';
 import { UseFormRegister, FieldValues, Path } from 'react-hook-form';
+import styles from './PwdLabel.module.scss';
+import { IconVisible, IconInvisible } from '@/assets/icongroup';
 
 interface Props<T extends FieldValues> {
   id: Path<T>;
@@ -21,14 +22,15 @@ export default function PwdInputWithLabel<T extends FieldValues>({
   const type = visible ? 'text' : 'password';
 
   return (
-    <div>
-      <label htmlFor={id}>
+
+    <div className={styles.container}>
+      <label htmlFor={id} className={styles.label}>
         {label}
       </label>
-      <div className='relative'>
+      <div className={styles.inputWrapper}>
         <input
           {...register(id)}
-          className={`input`}
+          className={`${styles.input} ${error ? styles.inputError : ''}`}
           type={type}
           id={id}
           placeholder={placeholder}
@@ -36,21 +38,19 @@ export default function PwdInputWithLabel<T extends FieldValues>({
         />
         <button
           type='button'
-          onClick={() => setVisible(!visible)}
+
+          className={styles.button}
+          onClick={() => setVisible((prevVisible) => !prevVisible)}
         >
-          <Image
-            src={
-              visible
-                ? 'assets/icons/ic_visible.svg'
-                : 'assets/icons/ic_visible.svg'
-            }
-            alt='비밀번호 보이기 아이콘'
-            width={20}
-            height={20}
-          />
+          {visible ? (
+            <IconVisible className={styles.icon} />
+          ) : (
+            <IconInvisible className={styles.icon} />
+          )}
         </button>
       </div>
-      {error && <p>{error}</p>}
+      {error && <p className={styles.errorMessage}>{error}</p>}
+
     </div>
   );
 }
