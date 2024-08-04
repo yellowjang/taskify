@@ -1,0 +1,29 @@
+@use '@/styles/index' as *;
+
+.top {
+  @include Size(378px, 260px);
+  @include border-radius(8px 8px 0 0);
+
+  background-color: $black-4b;
+  @include Flex(row, center, center);
+}
+
+.bottom {
+  @include Flex(column, null, null);
+  gap: 18px;
+
+  @include border-radius(0 0 8px 8px);
+  @include Size(378px, 124px);
+  padding: 33px 0 0 32px;
+
+  background-color: $black-17;
+
+  .title {
+    @include FontStyle(2lg, bold);
+    color: $white;
+  }
+  .description {
+    @include FontStyle(lg, medium);
+    color: $white;
+  }
+}
