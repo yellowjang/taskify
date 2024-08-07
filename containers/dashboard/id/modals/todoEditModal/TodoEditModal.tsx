@@ -85,7 +85,7 @@ export default function TodoEditModal({ card }: { card: ICard }) {
             </button>
             <button
               type='submit'
-              className={`${styles['button']} ${styles['violet']}`}
+              className={`${styles['button']} ${styles['yellow']}`}
             >
               수정
             </button>

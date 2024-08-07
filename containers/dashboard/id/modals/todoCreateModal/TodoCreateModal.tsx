@@ -132,7 +132,7 @@ export default function TodoCreateModal({
           </button>
           <button
             type='submit'
-            className={`${styles['button']} ${styles['violet']}`}
+            className={`${styles['button']} ${styles['yellow']}`}
           >
             생성
           </button>

@@ -116,9 +116,10 @@
   color: $gray-78;
   background-color: $white;
 
-  &.violet {
+  &.yellow {
     color: $white;
-    background-color: $violet;
+    background-color: $main-yellow;
+    border: 1px solid $main-yellow;
   }
 }
 
