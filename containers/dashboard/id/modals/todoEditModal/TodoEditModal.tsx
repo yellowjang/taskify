@@ -229,7 +229,7 @@ export default function TodoEditModal({ card }: { card: ICard }) {
             <label className={styles['form-label']}>이미지</label>
             <ImageInput
               name='user-profile'
-              value={storedImageUrl} // 수정: storedImageUrl 상태 전달
+              value={currentImageUrl} // 수정: storedImageUrl 상태 전달
               onChange={handleImageChange} // 수정: handleImageChange 함수 전달
               onDeleteClick={handleImageDelete} // 수정: handleImageDelete 함수 전달
             />
