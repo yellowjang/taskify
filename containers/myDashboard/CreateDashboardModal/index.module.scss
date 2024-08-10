@@ -32,6 +32,10 @@
     padding: 12px 0 12px 16px;
     border: 1px solid $gray-d9;
     border-radius: 8px;
+    padding-left: 8px;
+    &:focus {
+      outline: none;
+    }
   }
 }
 
