@@ -14,7 +14,6 @@ import SelectProgressDropdown from '@/containers/dashboard/id/dropdown/SelectPro
 import SelectAssigneeDropdown from '@/containers/dashboard/id/dropdown/SelectAssigneeDropdown';
 import ImageInput from '@/components/Input/ImageInput';
 
-
 export default function TodoEditModal({ card }: { card: ICard }) {
   const {
     id: cardId,
@@ -33,7 +32,7 @@ export default function TodoEditModal({ card }: { card: ICard }) {
       description: description,
       dueDate: dueDate ? dueDate.slice(0, 16) : '',
       tags: tags?.join(', '),
-      imageUrl: imageUrl ?? null,
+      imageUrl: imageUrl ?? '',
     },
   });
 
@@ -75,7 +74,7 @@ export default function TodoEditModal({ card }: { card: ICard }) {
   const handleImageDelete: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
     clearImage();
-    setValue('imageUrl', null);
+    setValue('imageUrl', '');
   };
   /*put*/
 
@@ -84,13 +83,10 @@ export default function TodoEditModal({ card }: { card: ICard }) {
       console.log('Request Data:', data);
       return axios.put(`/cards/${cardId}`, data);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['getColumnList', dashboardId]);
-      setCloseEditModal();
-    },
-    onError: (error) => {
-      console.error('Update Error:', error);
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['getColumnList', dashboardId],
+      }),
   });
 
   // onSubmit 핸들러 추가

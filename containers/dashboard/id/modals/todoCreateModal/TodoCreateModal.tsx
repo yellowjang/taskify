@@ -30,7 +30,6 @@ export default function TodoCreateModal({ onClose }: { onClose: () => void }) {
   const [selectedAssigneeValue, setSelectedAssigneeValue] = useState<
     IAssignee | IMember | null
   >(null);
-
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const postTodoMutation = useMutation({
@@ -38,7 +37,9 @@ export default function TodoCreateModal({ onClose }: { onClose: () => void }) {
       return axios.post(`/cards`, formData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['getColumnList', dashboardId]);
+      queryClient.invalidateQueries({
+        queryKey: ['getColumnList', dashboardId],
+      });
       reset(); // 폼 초기화
       onClose(); // 모달 닫기
     },
@@ -48,16 +49,17 @@ export default function TodoCreateModal({ onClose }: { onClose: () => void }) {
   });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    // 선택된 담당자의 ID 추가
     const assigneeUserId = selectedAssigneeValue?.id ?? null;
-
-    // 전송할 데이터 생성
+    const numericDashboardId = Number(dashboardId);
+    const formattedDueDate = data.dueDate
+      ? new Date(data.dueDate).toISOString().slice(0, 16).replace('T', ' ')
+      : null;
     const requestData: FormValues = {
       ...data,
-      assigneeUserId,
-      imageUrl, // 이미지 URL 포함
-      dashboardId,
-      columnId: columnList?.[0]?.id ?? null, // 필요한 경우 columnId 추가
+      // assigneeUserId,
+      // imageUrl,
+      dashboardId: numericDashboardId,
+      columnId: columnList?.[0]?.id ?? null,
     };
 
     console.log('Form Data:', requestData); // 디버깅을 위한 콘솔 출력
@@ -72,8 +74,8 @@ export default function TodoCreateModal({ onClose }: { onClose: () => void }) {
           className={styles['form']}
           onSubmit={handleSubmit(onSubmit)}
           onReset={() => {
-            reset(); // 폼 리셋
-            onClose(); // 모달 닫기
+            reset();
+            onClose();
           }}
         >
           <p className={styles['modal-title']}>할 일 생성</p>
