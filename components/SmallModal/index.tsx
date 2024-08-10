@@ -1,6 +1,7 @@
 import styles from './index.module.scss';
 import { modalValues } from '@/constants/ModalConstant';
 import { useForm } from 'react-hook-form';
+import Button from '../Button';
 
 function SmallModal({
   type,
@@ -40,12 +41,17 @@ function SmallModal({
           />
         </div>
         <div className={styles['button-wrapper']}>
-          <button className={styles['left-btn']} onClick={handleLeftBtnClick}>
+          <Button
+            buttonType='secondary'
+            type='button'
+            onClick={handleLeftBtnClick}
+          >
             {modalValues[type].leftBtn}
-          </button>
-          <button className={styles['right-btn']} onClick={handleRightBtnClick}>
+          </Button>
+
+          <Button buttonType='primary' onClick={handleRightBtnClick}>
             {modalValues[type].rightBtn}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
