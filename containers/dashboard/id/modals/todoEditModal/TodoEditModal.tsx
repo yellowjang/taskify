@@ -1,7 +1,6 @@
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import styles from './TodoEditModal.module.scss';
-
-import { useForm, SubmitHandler } from 'react-hook-form'; // 수정: SubmitHandler 추가
-import { useState, useEffect, ChangeEvent, MouseEventHandler } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import useImageStore from '@/stores/ImageInputStore';
 import ModalPortal from '@/components/ModalPortal';
 import useTodoEditModalStore from '@/stores/useTodoEditModalStore';
@@ -14,6 +13,7 @@ import SelectAssigneeDropdown from '@/containers/dashboard/id/dropdown/SelectAss
 import ImageInput from '@/components/Input/ImageInput';
 import getDate from '@/utils/getDate';
 import useToast from '@/hooks/useToast';
+import HashTagsInput from '@/containers/dashboard/id/modals/components/hastagsInput/HashtagsInput';
 
 export default function TodoEditModal({ card }: { card: ICard }) {
   const {
@@ -22,13 +22,15 @@ export default function TodoEditModal({ card }: { card: ICard }) {
     description,
     columnId,
     dueDate,
-    tags,
+    tags: initialTags,
     imageUrl,
     assignee,
   } = card;
+
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(
     imageUrl,
   );
+  const [tags, setTags] = useState<string[]>(initialTags); // 태그 상태 관리
 
   const { toast } = useToast();
   const { register, handleSubmit, setValue } = useForm<FormValues>({
@@ -52,7 +54,6 @@ export default function TodoEditModal({ card }: { card: ICard }) {
   const [selectedProgressValue, setSelectedProgressValue] = useState<IColumn>(
     currentColumn!,
   );
- 
 
   const [selectedAssigneeValue, setSelectedAssigneeValue] = useState<
     IAssignee | IMember | null
@@ -95,16 +96,13 @@ export default function TodoEditModal({ card }: { card: ICard }) {
     if (res) {
       setCurrentImageUrl(res);
     }
-
   };
 
   const handleImageDelete = () => {
-
     setCurrentImageUrl(null);
-
   };
-  /*put*/
 
+  /*put*/
   const updateColumnMutation = useMutation({
     mutationFn: (data: IPostData) => {
       console.log('Request Data:', data);
@@ -130,17 +128,20 @@ export default function TodoEditModal({ card }: { card: ICard }) {
 
   // onSubmit 핸들러 추가
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const { title, description, dueDate, imageUrl, tags } = data;
+    const { title, description, dueDate, imageUrl } = data;
 
     const requestData: IPostData = {
       title: title,
       description: description,
       columnId: selectedProgressValue.id,
-      assigneeUserId:
-        'userId' in selectedAssigneeValue!
+      assigneeUserId: selectedAssigneeValue
+
+        ? 'userId' in selectedAssigneeValue
           ? selectedAssigneeValue?.userId ?? null
-          : selectedAssigneeValue?.id ?? 0,
-      tags: tags,
+          : selectedAssigneeValue?.id ?? null
+        : null,
+      tags: tags, 
+      
       dueDate: dueDate ? getDate(dueDate, true) : null,
       imageUrl: currentImageUrl ?? null,
     };
@@ -152,7 +153,6 @@ export default function TodoEditModal({ card }: { card: ICard }) {
     <ModalPortal onClose={setCloseEditModal}>
       <div className={styles['container']}>
         <form className={styles['form']} onSubmit={handleSubmit(onSubmit)}>
-          {' '}
           <p className={styles['modal-title']}>할 일 수정</p>
           <div className={styles['status-and-owner']}>
             <div
@@ -208,19 +208,15 @@ export default function TodoEditModal({ card }: { card: ICard }) {
           </div>
           <div className={styles['label-and-form']}>
             <label className={styles['form-label']}>태그</label>
-            <textarea
-              className={styles['date-input']}
-              placeholder='라벨칩'
-              {...register('tags')}
-            />
+            <HashTagsInput tags={tags} setTags={setTags} />{' '}
           </div>
           <div className={styles['label-and-form']}>
             <label className={styles['form-label']}>이미지</label>
             <ImageInput
               name='user-profile'
-              value={currentImageUrl} // 수정: storedImageUrl 상태 전달
-              onChange={handleImageChange} // 수정: handleImageChange 함수 전달
-              onDeleteClick={handleImageDelete} // 수정: handleImageDelete 함수 전달
+              value={currentImageUrl}
+              onChange={handleImageChange}
+              onDeleteClick={handleImageDelete}
             />
           </div>
           <div className={styles['button-group']}>
