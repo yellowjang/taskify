@@ -2,6 +2,7 @@
 @import '@/styles/mixins/mixinModal';
 
 .container {
+  @include ModalStyle;
   font-family: pretendard;
   @include Flex(column, null, null);
   gap: 32px;
@@ -12,7 +13,17 @@
   padding: 32px;
   background-color: $white;
 
-  @include ModalStyle;
+  &.dark {
+    background-color: $dark-card;
+    color: rgba($white, 0.87);
+    .form-label {
+      color: rgba($white, 0.87);
+    }
+    .button {
+      background-color: $dark-secondary-btn;
+      border: none;
+    }
+  }
 }
 
 .form {
