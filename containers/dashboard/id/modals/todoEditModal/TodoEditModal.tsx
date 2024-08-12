@@ -136,6 +136,11 @@ export default function TodoEditModal({ card }: { card: ICard }) {
   });
 
   useEffect(() => {
+    const initialFormValid = title?.trim() !== '' && description?.trim() !== '';
+    setIsFormValid(initialFormValid);
+  }, []);
+
+  useEffect(() => {
     const subscription = watch((value) => {
       const titleValue = value.title?.trim() !== '';
       const descriptionValue = value.description?.trim() !== '';
