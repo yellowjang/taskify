@@ -249,7 +249,10 @@ export default function TodoEditModal({ card }: { card: ICard }) {
           </div>
           <div className={styles['label-and-form']}>
             <label className={styles['form-label']}>태그</label>
-            <HashTagsInput tags={tags} setTags={setTags} />{' '}
+            <HashTagsInput
+              tags={tags}
+              setTags={setTags}
+            />{' '}
           </div>
           <div className={styles['label-and-form']}>
             <label className={styles['form-label']}>이미지</label>
