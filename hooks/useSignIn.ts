@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useUserStore } from '@/store/useUserStore';
 import { User } from '@/types/User.interface';
 import { SignInError } from './SignInError';
+import axios from 'axios';
 
 interface SignInResponse {
   user: {
@@ -24,24 +25,23 @@ interface SignInCredentials {
 const signIn = async (
   credentials: SignInCredentials,
 ): Promise<SignInResponse> => {
-  const response = await fetch(
-    'https://sp-taskify-api.vercel.app/7-6/auth/login',
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
-    },
-  );
-
-  if (!response.ok) {
-    const error = new SignInError('Login failed', response);
-    throw error;
+  try {
+    const response = await axios.post<SignInResponse>(
+      'https://sp-taskify-api.vercel.app/7-6/auth/login',
+      credentials,
+    );
+    localStorage.setItem('accessToken', response.data.accessToken);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new SignInError(
+        error.response?.data?.message || '로그인 실패',
+        error.response,
+      );
+    } else {
+      throw new SignInError('네트워크 오류 또는 알 수 없는 오류 발생');
+    }
   }
-
-  const data: SignInResponse = await response.json();
-  localStorage.setItem('accessToken', data.accessToken);
-
-  return data;
 };
 
 export const useSignIn = () => {
@@ -66,19 +66,7 @@ export const useSignIn = () => {
       setLoading(false);
     },
     onError: (error: SignInError) => {
-      let errorMessage = '로그인에 실패했습니다. 다시 시도해주세요.';
-
-      if (error.response) {
-        if (error.response.status === 404) {
-          errorMessage = '존재하지 않는 유저입니다.';
-        } else if (error.response.status === 400) {
-          errorMessage = '이메일 형식으로 작성해주세요.';
-        }
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
-      setError(errorMessage);
+      setError(error.message);
       setLoading(false);
     },
   });

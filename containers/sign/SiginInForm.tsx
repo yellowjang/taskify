@@ -1,3 +1,4 @@
+// src/containers/sign/SignInForm.tsx
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
@@ -8,10 +9,9 @@ import ButtonSet from '@/components/ButtonSet';
 import PwdLabel from '@/containers/sign/PwdLabel';
 import TextInputLabel from '@/containers/sign/TextInputLabel';
 import { useSignIn } from '@/hooks/useSignIn';
-import { useUserStore } from '@/store/useUserStore';
 import useToast from '@/hooks/useToast';
-import { SignInError } from '@/hooks/SignInError';
 import styles from './SignForm.module.scss';
+import { SignInError } from '@/hooks/SignInError';
 
 export type TSignInInputs = {
   email: string;
@@ -40,12 +40,7 @@ export default function SignInForm() {
   });
   const mutation = useSignIn();
   const router = useRouter();
-
   const { toast } = useToast();
-
-  // Zustand store의 상태를 조회
-  const user = useUserStore((state) => state.user);
-  const error = useUserStore((state) => state.error);
 
   const onSubmit = (data: TSignInInputs) => {
     mutation.mutate(data, {
@@ -53,28 +48,17 @@ export default function SignInForm() {
         toast('success', '로그인 되었습니다.');
         router.push('/mydashboard');
       },
-      onError: (error: any) => {
-        let errorMessage = '로그인에 실패했습니다. 다시 시도해주세요.';
-
-        if (error instanceof SignInError) {
-          if (error.response?.status === 404) {
-            errorMessage = '존재하지 않는 유저입니다.';
-          } else if (error.response?.status === 400) {
-            errorMessage = '이메일 형식으로 작성해주세요.';
-          }
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
-
-        console.error('로그인에 실패했습니다:', error);
-
-        toast('error', errorMessage);
+      onError: (error: SignInError) => {
+        toast(
+          'error',
+          error.message || '로그인에 실패했습니다. 다시 시도해주세요.',
+        );
       },
     });
   };
 
   return (
-    <form className={styles[`form`]} onSubmit={handleSubmit(onSubmit)}>
+    <form className={styles['form']} onSubmit={handleSubmit(onSubmit)}>
       <TextInputLabel
         id='email'
         label='이메일'
@@ -98,7 +82,7 @@ export default function SignInForm() {
       </div>
       {mutation.isError && (
         <p className={styles['error-message']}>
-          {mutation.error instanceof Error
+          {mutation.error instanceof SignInError
             ? mutation.error.message
             : '알 수 없는 오류가 발생했습니다.'}
         </p>

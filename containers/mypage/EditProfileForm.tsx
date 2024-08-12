@@ -1,4 +1,3 @@
-// EditProfileForm.tsx
 import { useRouter } from 'next/router';
 import { ChangeEvent, FormEventHandler, useState, useEffect } from 'react';
 import { useUserStore } from '@/store/useUserStore';
@@ -6,7 +5,6 @@ import ImageInput from '@/components/Input/ImageInput';
 import { useUpdateProfile } from '@/hooks/useUpdateProfile';
 import { postImage } from '@/services/postService';
 import Button from '@/components/Button';
-import ButtonSet from '@/components/ButtonSet';
 import useToast from '@/hooks/useToast';
 import styles from './EditProfileForm.module.scss';
 import { UpdateProfileForm } from '@/types/UpdateProfileForm.interface';
@@ -15,13 +13,16 @@ import { useTheme } from '@/hooks/useThemeContext';
 export default function EditProfileForm() {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
-  const { mutate, isPending, isError, error } = useUpdateProfile();
+  const { mutate, isPending } = useUpdateProfile();
   const { user, loading } = useUserStore((state) => ({
     user: state.user,
     loading: state.loading,
   }));
   const [nickname, setNickname] = useState(user?.nickname ?? '');
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [currentProfileImageUrl, setCurrentProfileImageUrl] = useState<
+    string | null
+  >(user?.profileImageUrl || null);
   const [isNicknameValid, setIsNicknameValid] = useState({
     gtZero: true,
     lteTen: true,
@@ -62,25 +63,27 @@ export default function EditProfileForm() {
 
   const handleImageDelete = () => {
     setProfileImageFile(null);
+    setCurrentProfileImageUrl(null);
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const formProfileData = async () => {
+    const formProfileData = async (): Promise<UpdateProfileForm> => {
       const formData: UpdateProfileForm = {
-        nickname: nickname || user?.nickname || '', // 닉네임이 항상 포함되도록 처리
+        nickname: nickname || user?.nickname || '',
       };
-
-      if (!profileImageFile && user?.profileImageUrl) {
-        formData['profileImageUrl'] = null;
-      }
 
       if (profileImageFile) {
         const { profileImageUrl } = await postImage({
           image: profileImageFile,
         });
-        formData['profileImageUrl'] = profileImageUrl;
+        formData.profileImageUrl = profileImageUrl;
+        setCurrentProfileImageUrl(profileImageUrl);
+      } else if (profileImageFile === null && currentProfileImageUrl === null) {
+        formData.profileImageUrl = null;
+      } else {
+        formData.profileImageUrl = currentProfileImageUrl;
       }
 
       return formData;
@@ -89,20 +92,19 @@ export default function EditProfileForm() {
     const postData = async () => {
       const formData = await formProfileData();
 
-      if (Object.keys(formData).length !== 0) {
-        mutate(formData, {
-          onSuccess: () => {
-            toast('success', '프로필이 변경되었습니다.');
-          },
-          onError: (error: any) => {
-            toast('error', '프로필 변경에 실패했습니다. 다시 시도해주세요.');
-          },
-        });
-      }
+      mutate(formData, {
+        onSuccess: () => {
+          toast('success', '프로필이 변경되었습니다.');
+        },
+        onError: () => {
+          toast('error', '프로필 변경에 실패했습니다. 다시 시도해주세요.');
+        },
+      });
     };
 
     postData();
   };
+
   const { theme } = useTheme();
 
   return (
@@ -111,7 +113,7 @@ export default function EditProfileForm() {
         <div className={styles['image-box']}>
           <ImageInput
             name='user-profile'
-            value={user?.profileImageUrl || null}
+            value={currentProfileImageUrl}
             onChange={handleImageChange}
             onDeleteClick={handleImageDelete}
           />
