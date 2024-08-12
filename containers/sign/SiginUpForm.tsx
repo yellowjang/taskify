@@ -13,6 +13,7 @@ import { postSignUp } from '@/services/postService';
 import useToast from '@/hooks/useToast';
 import { useModalStore } from '@/stores/modalStore';
 import styles from './SignForm.module.scss';
+import { useTheme } from '@/hooks/useThemeContext';
 
 export type TSignUpInputs = {
   email: string;
@@ -96,8 +97,13 @@ export default function SignUpForm() {
     setOpenModal();
   };
 
+  const { theme } = useTheme();
+
   return (
-    <form className={styles[`form`]} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={`${styles[`form`]} ${styles[theme]}`}
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <TextInputLabel
         id='email'
         label='이메일'

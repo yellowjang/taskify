@@ -14,6 +14,11 @@
     flex-direction: column;
     gap: 10px;
   }
+  &.dark {
+    .label {
+      color: rgba($white, 0.87);
+    }
+  }
 }
 
 .button {
@@ -27,4 +32,8 @@
       margin-bottom: 16px;
     }
   }
+}
+
+.label {
+  @include FontStyle('lg', 'regular', 'lg', 'md');
 }

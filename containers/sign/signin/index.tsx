@@ -2,10 +2,12 @@ import Link from 'next/link';
 import SignInForm from '@/containers/sign/SiginInForm';
 import TopLogoSection from '@/containers/sign/TopLogoSection';
 import styles from './index.module.scss';
+import { useTheme } from '@/hooks/useThemeContext';
 
 export default function SignIn() {
+  const { theme } = useTheme();
   return (
-    <div className={styles[`box`]}>
+    <div className={`${styles[`box`]} ${styles[theme]}`}>
       <div className={styles[`login`]}>
         <TopLogoSection text='오늘도 만나서 반가워요!' />
         <SignInForm />

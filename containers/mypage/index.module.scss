@@ -6,8 +6,21 @@
   padding: 16px 12px;
   color: $black-33;
   background-color: $gray-fa;
+  min-height: 100vh;
   @include tablet {
     padding: 20px;
+  }
+
+  &.dark {
+    background-color: $dark-theme;
+    .profile-box,
+    .pwd-box {
+      background-color: $dark-card;
+    }
+    .profile,
+    .pwd-change {
+      color: rgba($white, 0.87);
+    }
   }
   .profile-box {
     width: 100%;
@@ -21,17 +34,10 @@
     }
     .profile {
       margin-bottom: 24px;
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 32px;
+      @include FontStyle('2xl', 'bold', '2xl', '2lg');
 
       @include tablet {
         margin-bottom: 32px;
-      }
-
-      @include mobile {
-        font-size: 18px;
-        line-height: 26px;
       }
     }
   }
@@ -49,18 +55,11 @@
     }
     .pwd-change {
       margin-bottom: 24px;
-      margin-top: 28px;
-      font-weight: 700;
-      font-size: 24px;
-      line-height: 32px;
+      @include FontStyle('2xl', 'bold', '2xl', '2lg');
 
       @include tablet {
         margin-top: 32px;
         margin-bottom: 32px;
-      }
-      @include mobile {
-        font-size: 18px;
-        line-height: 26px;
       }
     }
   }

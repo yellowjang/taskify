@@ -10,6 +10,7 @@ import ButtonSet from '@/components/ButtonSet';
 import useToast from '@/hooks/useToast';
 import styles from './EditProfileForm.module.scss';
 import { UpdateProfileForm } from '@/types/UpdateProfileForm.interface';
+import { useTheme } from '@/hooks/useThemeContext';
 
 export default function EditProfileForm() {
   const [isClient, setIsClient] = useState(false);
@@ -102,10 +103,11 @@ export default function EditProfileForm() {
 
     postData();
   };
+  const { theme } = useTheme();
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className={styles['container']}>
+      <div className={`${styles['container']} ${styles[theme]}`}>
         <div className={styles['image-box']}>
           <ImageInput
             name='user-profile'
@@ -116,12 +118,12 @@ export default function EditProfileForm() {
         </div>
         <div className={styles['form-box']}>
           <div className={styles['email-size']}>
-            <label className='label'>이메일</label>
+            <label className={styles[`labels`]}>이메일</label>
             <p className={styles['input']}>{user?.email}</p>
           </div>
 
           <div className={styles['nickname']}>
-            <label htmlFor='nickname' className='label'>
+            <label htmlFor='nickname' className={styles[`labels`]}>
               닉네임
             </label>
             <input

@@ -2,6 +2,7 @@ import React from 'react';
 import ModalPortal from '@/components/ModalPortal';
 import { useModalStore } from '@/stores/modalStore';
 import styles from './AgreeModal.module.scss';
+import { useTheme } from '@/hooks/useThemeContext';
 
 interface ModalProps {
   onAgree: () => void;
@@ -12,20 +13,22 @@ const Modal: React.FC<ModalProps> = ({ onAgree }) => {
 
   if (!isModalOpen) return null;
 
+  const { theme } = useTheme();
+
   return (
     <ModalPortal onClose={setCloseModal}>
-      <div className={styles[`modal`]}>
-        <h2>이용약관</h2>
+      <div className={`${styles[`modal`]} ${styles[theme]}`}>
+        <h2 className={styles[`title`]}>이용약관</h2>
         <div className={styles[`modal-content`]}>
-          <p>제 1 장 총칙</p>
-          <p>제 1 조 (목적)</p>
+          <p className={styles[`sub-title`]}>제 1 장 총칙</p>
+          <p className={styles[`content`]}>제 1 조 (목적)</p>
           <p>
             본 약관은 통계청이 운영하는 나라통계시스템 운영홈페이지(이하 "당
             사이트")에서 제공하는 모든 서비스(이하 "서비스")의 이용조건 및 절차,
             이용자와 당 사이트의 권리, 의무, 책임사항과 기타 필요한 사항을
             규정함을 목적으로 합니다.
           </p>
-          <p>제 2 조 (약관의 효력과 변경)</p>
+          <p className={styles[`content`]}>제 2 조 (약관의 효력과 변경)</p>
           <p>
             ① 당 사이트는 이용자가 본 약관 내용에 동의하는 것을 조건으로
             이용자에게 서비스를 제공하며, 당 사이트의 서비스 제공 행위 및
@@ -37,13 +40,13 @@ const Modal: React.FC<ModalProps> = ({ onAgree }) => {
             암묵적 동의로 간주됩니다. 변경된 약관은 공지와 동시에 그 효력을
             발휘합니다.
           </p>
-          <p>제 3 조 (약관 외 준칙)</p>
+          <p className={styles[`content`]}>제 3 조 (약관 외 준칙)</p>
           <p>
             본 약관에 명시되지 않은 사항은 전기통신기본법, 전기통신사업법,
             정보통신망 이용촉진 및 정보보호 등에 관한 법률 및 기타 관련 법령의
             규정에 의합니다.
           </p>
-          <p>제 4 조 (용어의 정의)</p>
+          <p className={styles[`content`]}>제 4 조 (용어의 정의)</p>
           <p>
             ① 본 약관에서 사용하는 용어의 정의는 다음과 같습니다. 1. 이용자 : 본
             약관에 따라 당 사이트가 제공하는 서비스를 받는 자 2. 가 입 : 당

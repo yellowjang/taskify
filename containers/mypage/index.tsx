@@ -2,11 +2,14 @@ import EditProfileForm from '@/containers/mypage/EditProfileForm';
 import PwdChangeForm from '@/containers/mypage/PwdChangeForm';
 import styles from './index.module.scss';
 import DashboardLayout from '../dashboardLayout';
+import { useTheme } from '@/hooks/useThemeContext';
 
 export default function Mypage() {
+  const { theme } = useTheme();
+
   return (
     <DashboardLayout>
-      <div className={styles[`text`]}>
+      <div className={`${styles[`text`]} ${styles[theme]}`}>
         <section className={styles[`profile-box`]}>
           <h2 className={styles[`profile`]}>프로필</h2>
           <EditProfileForm />

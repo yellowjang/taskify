@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { UseFormRegister, FieldValues, Path } from 'react-hook-form';
 import styles from './PwdLabel.module.scss';
 import { IconVisible, IconInvisible } from '@/assets/icongroup';
+import { useTheme } from '@/hooks/useThemeContext';
 
 interface Props<T extends FieldValues> {
   id: Path<T>;
@@ -21,8 +22,10 @@ export default function PwdInputWithLabel<T extends FieldValues>({
   const [visible, setVisible] = useState(false);
   const type = visible ? 'text' : 'password';
 
+  const { theme } = useTheme();
+
   return (
-    <div className={styles[`container`]}>
+    <div className={`${styles[`container`]} ${styles[theme]}`}>
       <label htmlFor={id} className={styles[`label`]}>
         {label}
       </label>

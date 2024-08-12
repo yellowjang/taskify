@@ -1,4 +1,5 @@
 import { UseFormRegister, FieldValues, Path } from 'react-hook-form';
+import { useTheme } from '@/hooks/useThemeContext';
 import styles from './PwdLabel.module.scss';
 
 interface Props<T extends FieldValues> {
@@ -24,8 +25,10 @@ export default function TextInputWithLabel<T extends FieldValues>({
     autoComplete = 'email';
   }
 
+  const { theme } = useTheme();
+
   return (
-    <div className={styles[`container`]}>
+    <div className={`${styles[`container`]} ${styles[theme]}`}>
       <label htmlFor={id} className={styles[`label`]}>
         {label}
       </label>

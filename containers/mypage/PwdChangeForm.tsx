@@ -5,6 +5,7 @@ import PwdInput from '@/components/Input/PwdInput';
 import { putPassword } from '@/services/putService';
 import styles from './PwdChangeForm.module.scss';
 import useToast from '@/hooks/useToast';
+import { useTheme } from '@/hooks/useThemeContext';
 
 interface PasswordChangeForm {
   password: string;
@@ -111,10 +112,11 @@ export default function PwdChangeForm() {
 
     putData();
   };
+  const { theme } = useTheme();
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className={styles[`box`]}>
+      <div className={`${styles[`box`]} ${styles[theme]}`}>
         <div className={styles[`password`]}>
           <label htmlFor='password' className={styles[`label`]}>
             현재 비밀번호

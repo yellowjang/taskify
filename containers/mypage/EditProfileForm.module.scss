@@ -12,6 +12,11 @@
   @include mobile {
     display: block;
   }
+  &.dark {
+    .labels {
+      color: rgba($white, 0.87);
+    }
+  }
 }
 
 .image-box {
@@ -127,4 +132,8 @@
     margin-top: 16px;
     margin-bottom: 24px;
   }
+}
+
+.labels {
+  @include FontStyle('lg', 'regular', 'lg', 'md');
 }
