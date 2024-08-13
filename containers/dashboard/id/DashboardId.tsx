@@ -15,6 +15,8 @@ import { useTheme } from '@/hooks/useThemeContext';
 import Spinner from '@/components/Spinner';
 import { useEffect } from 'react';
 import useToast from '@/hooks/useToast';
+import useDashboardMember from '@/hooks/useDashboardMember';
+import { useUserStore } from '@/store/useUserStore';
 
 function DashboardId() {
   const { theme } = useTheme();
@@ -33,7 +35,7 @@ function DashboardId() {
       router.push('/mydashboard');
       toast('error', '대시보드 로딩에 실패했습니다.');
     }
-  }, [isLoading, error]);
+  }, [isLoading, error, id]);
 
   // 로딩일 경우 스피너
   if (isLoading)
