@@ -22,9 +22,11 @@
     }
     @include mobile {
       width: 375px;
+      margin: 12px;
     }
     .member {
-      margin-top: 20px;
+      margin-top: 24px;
+      margin-bottom: 73px;
       text-align: center;
       color: $black-33;
       @include FontStyle(16, 400);

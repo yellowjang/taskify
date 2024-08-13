@@ -11,34 +11,37 @@ import { UpdateProfileForm } from '@/types/UpdateProfileForm.interface';
 import { useTheme } from '@/hooks/useThemeContext';
 
 export default function EditProfileForm() {
-  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
   const { mutate, isPending } = useUpdateProfile();
   const { user, loading } = useUserStore((state) => ({
     user: state.user,
     loading: state.loading,
   }));
-  const [nickname, setNickname] = useState(user?.nickname ?? '');
+  const [nickname, setNickname] = useState('');
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [currentProfileImageUrl, setCurrentProfileImageUrl] = useState<
     string | null
-  >(user?.profileImageUrl || null);
+  >(null);
   const [isNicknameValid, setIsNicknameValid] = useState({
     gtZero: true,
     lteTen: true,
   });
 
   const { toast } = useToast();
+  const { theme } = useTheme();
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    if (user) {
+      setNickname(user.nickname || '');
+      setCurrentProfileImageUrl(user.profileImageUrl || null);
+    }
+  }, [user]);
 
   useEffect(() => {
-    if (isClient && !loading && !user) {
+    if (!loading && !user) {
       router.replace('/signin');
     }
-  }, [user, loading, router, isClient]);
+  }, [user, loading, router]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -59,6 +62,10 @@ export default function EditProfileForm() {
 
   const handleImageChange = (image: File) => {
     setProfileImageFile(image);
+
+    // 새로운 이미지를 선택하면 미리보기 URL을 생성하여 설정
+    const imageUrl = URL.createObjectURL(image);
+    setCurrentProfileImageUrl(imageUrl);
   };
 
   const handleImageDelete = () => {
@@ -71,7 +78,7 @@ export default function EditProfileForm() {
 
     const formProfileData = async (): Promise<UpdateProfileForm> => {
       const formData: UpdateProfileForm = {
-        nickname: nickname || user?.nickname || '',
+        nickname: nickname || user.nickname || '',
       };
 
       if (profileImageFile) {
@@ -79,10 +86,8 @@ export default function EditProfileForm() {
           image: profileImageFile,
         });
         formData.profileImageUrl = profileImageUrl;
-        setCurrentProfileImageUrl(profileImageUrl);
-      } else if (profileImageFile === null && currentProfileImageUrl === null) {
-        formData.profileImageUrl = null;
       } else {
+        // 이미지가 삭제된 경우 currentProfileImageUrl을 검사하여 null로 설정
         formData.profileImageUrl = currentProfileImageUrl;
       }
 
@@ -104,8 +109,6 @@ export default function EditProfileForm() {
 
     postData();
   };
-
-  const { theme } = useTheme();
 
   return (
     <form onSubmit={handleSubmit}>

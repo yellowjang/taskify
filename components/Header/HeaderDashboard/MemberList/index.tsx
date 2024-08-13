@@ -17,7 +17,17 @@ export default function MemberList({
   const { isLoading, error, data } = useQuery({
     queryKey: ['memberList', dashboardId],
     queryFn: () => fetchDashboardMembers(dashboardId),
+    staleTime: 0, // Always consider the data stale
+    refetchOnMount: true, // Always refetch data when the component mounts
   });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading members</div>;
+  }
 
   if (!data) {
     return null;

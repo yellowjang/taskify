@@ -9,12 +9,14 @@ import { ProfileIcon } from '../ProfileIcon/ProfileIcon';
 import { useUserStore } from '@/store/useUserStore';
 import { useRouter } from 'next/router';
 import { deleteCookie } from 'cookies-next';
+import useToast from '@/hooks/useToast';
 
 function DropdownProfile({}) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isOpen, setIsOpen } = useDetectClose(dropdownRef, false);
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { toast } = useToast();
 
   const { user, setUser } = useUserStore();
 
@@ -41,6 +43,8 @@ function DropdownProfile({}) {
 
     // React Query 캐시 초기화
     queryClient.clear();
+
+    toast('success', '로그아웃 하였습니다.');
 
     // 로그인 페이지로 리다이렉트
     router.replace('/signin');

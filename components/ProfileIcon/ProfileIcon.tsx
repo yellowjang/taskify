@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import styles from './ProfileIcon.module.scss';
 import getBackgroundColor from '@/utils/getBackgroundColor';
 import { useTheme } from '@/hooks/useThemeContext';
@@ -15,16 +16,29 @@ export function ProfileIcon({
   imageUrl,
   compressRemain = false,
 }: ProfileIconProps) {
+  const [displayedImageUrl, setDisplayedImageUrl] = useState<string | null>(
+    imageUrl,
+  );
   const backColor = getBackgroundColor(nickname);
   const name = compressRemain ? nickname : nickname.substring(0, 1);
   const { theme } = useTheme();
 
-  if (imageUrl)
+  useEffect(() => {
+    setDisplayedImageUrl(imageUrl);
+  }, [imageUrl]);
+
+  if (displayedImageUrl) {
     return (
       <div className={classNames(styles['profile-img'], styles[theme])}>
-        <Image src={imageUrl} alt='프로필' fill className={styles['image']} />
+        <Image
+          src={displayedImageUrl}
+          alt='프로필'
+          fill
+          className={styles['image']}
+        />
       </div>
     );
+  }
 
   return (
     <div

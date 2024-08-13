@@ -1,5 +1,11 @@
 import Image from 'next/image';
-import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  MouseEventHandler,
+  useRef,
+  useState,
+  useEffect,
+} from 'react';
 import styles from './ImageInput.module.scss';
 import { IconClose, IconEdit, IconAddChip } from '@/assets/icongroup';
 
@@ -17,7 +23,12 @@ export default function ImageInput({
   onDeleteClick,
 }: ImageInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [tempImage, setTempImage] = useState(value || '');
+  const [tempImage, setTempImage] = useState<string | null>(value || '');
+
+  useEffect(() => {
+    // Update tempImage when value changes
+    setTempImage(value || '');
+  }, [value]);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -34,7 +45,7 @@ export default function ImageInput({
     const inputNode = inputRef.current as HTMLInputElement;
     inputNode.value = '';
     onDeleteClick();
-    setTempImage('');
+    setTempImage(null); // Set to null to remove image
   };
 
   return (
