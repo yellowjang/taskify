@@ -33,7 +33,7 @@ function MemberListItem({ item }: { item: any }) {
   return (
     <div className={`${styles['container']} ${themeStyle}`}>
       <div className={styles['member-info']}>
-        <ProfileIcon nickname={item.nickname} imageUrl={item.imageUrl} />
+        <ProfileIcon nickname={item.nickname} imageUrl={item.profileImageUrl} />
         <span className={styles['member-name']}>{item?.nickname}</span>
       </div>
       {!item.isOwner && (
